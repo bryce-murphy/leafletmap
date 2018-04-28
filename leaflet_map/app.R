@@ -87,8 +87,8 @@ ui <- fluidPage(
                     "Red-Yellow-Blue" = "RdYlBu",
                     "Yellow - Red" = "YlOrRd", 
                     "Yellow-Green-Blue" = "YlGnBu",
-                    "Purple-Orange" = "PuOr",
-                    "Purple-Green" = "PRGn",
+                    "Purple - Orange" = "PuOr",
+                    "Purple - Green" = "PRGn",
                     "Brown-Blue-Green" = "BrBG",
                     "Spectral"),
         selected = "RdYlGn")
@@ -124,13 +124,14 @@ server <- function(input, output) {
                  radius = ~sqrt(Population2010) * 10, 
                  fillColor = ~pal(value),
                  stroke = F,
-                 opacity = 1,
+                 fillOpacity = 0.5,
                  weight = 1) %>%
-      addLegend("bottomright", 
+      addLegend("bottomleft", 
                 pal = pal, 
                 values = ~value,
                 title = "Risk Factor",
-                opacity = 1)
+                opacity = 1) %>%
+      addMiniMap()
     
     
     
