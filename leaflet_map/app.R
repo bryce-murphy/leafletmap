@@ -79,8 +79,20 @@ ui <- fluidPage(
                     "Sleep" = "SLEEP",
                     "Stroke" = "STROKE",
                     "Teeth Loss" = "TEETHLOST"),
-        selected = "OBESITY")
-    ),
+        selected = "OBESITY"),
+      radioButtons(
+        inputId = "color",
+        label = "Select a Color Palette",
+        choices = c("Red-Yellow-Green" = "RdYlGn",
+                    "Red-Yellow-Blue" = "RdYlBu",
+                    "Yellow - Red" = "YlOrRd", 
+                    "Yellow-Green-Blue" = "YlGnBu",
+                    "Purple-Orange" = "PuOr",
+                    "Purple-Green" = "PRGn",
+                    "Brown-Blue-Green" = "BrBG",
+                    "Spectral"),
+        selected = "RdYlGn")
+      ),
     
     mainPanel(
       leafletOutput("USA")
@@ -103,25 +115,24 @@ server <- function(input, output) {
              measure == input$risk)
     
     pal <- colorNumeric(
-      palette = "YlOrRd",
+      palette = input$color,
       domain = cities_leaf$value)
     
-    p <-  cities_leaf %>%
-      leaflet() %>%
-      addTiles() %>%
-      addCircles(popup = cities$value,
-                 radius = ~Population2010, 
+    leaflet(cities_leaf) %>%
+      addProviderTiles(providers$CartoDB.Positron) %>%
+      addCircles(popup = ~as.character(value),
+                 radius = ~sqrt(Population2010) * 10, 
                  fillColor = ~pal(value),
                  stroke = F,
                  opacity = 1,
-                 weight = 3) %>%
+                 weight = 1) %>%
       addLegend("bottomright", 
                 pal = pal, 
                 values = ~value,
                 title = "Risk Factor",
                 opacity = 1)
     
-    p
+    
     
     
   })
